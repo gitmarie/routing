@@ -13,27 +13,94 @@ app.config(function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/home')
 
     // when this is run, the template is injected where ion-nav-view exists in html
-    
+
     // state transition 1
-    $stateProvider.state('home', {
-        url: '/home',
+    // add a to do list; change state declaration
+    $stateProvider.state('app.todos', {
+        abstract: true,
+        url: '/todos',
         views: {
-            help: {
-                templateUrl: 'home.html'
+            todos: {
+                template: '<ion-nav-view></ion-nav-view>'
             }
         }
     })
 
+    // creating nested levels of state machine namespaced to app.todos
+
     // state transition 2
-    $stateProvider.state('help', {
-        url: '/help',
-        views: {
-            help: {
-                templateUrl: 'help.html'
+    $stateProvider.state('app.todos.index', {
+        url: '',
+        templateUrl: 'todos.html',
+        controller: 'TodosCtrl'
+    })
+
+    // state transition 3
+    // make sure our data was available before we rendered the route and made it available
+    $stateProvider.state('app.todos.detail', {
+        url: '/:todo',
+        templateUrl: 'todo.html',
+        controller: 'TodoCtrl',
+        resolve: {
+            todo: function ($stateParams, TodosService) {
+                return TodosService.getTodo($stateParams.todo)
             }
         }
     });
+    /*
+    $stateProvider.state('app.todos.detail', {
+        url: '/:todo',
+        templateUrl: 'todos.html',
+        controller: 'TodosCtrl'
+    })
+    */
 })
+
+// declare TodosCtrl that will contain Todos data, pass it to the scope
+// create a singleton representation of Todos, that can be read and updated from multiple sources; ie use services
+app.controller('TodosService', function () {
+    var todos = [
+        {
+            title: "Take out the trash",
+            done: true
+        },
+        {
+            title: "Do laundry",
+            done: false
+        },
+        {
+            title: "Start cooking dinner",
+            done: false
+        }
+   ]
+
+    return {
+        todos: todos,
+        getTodo: function (index) {
+            return todos[index]
+        }
+    }
+})
+
+// TodosCtrl code now becomes
+app.controller('TodosCtrl', function ($scope, TodosService) {
+    $scope.todos = TodosService.todos
+});
+
+// setup a TodoCtrl to access this data
+app.controller('TodoCtrl', function($scope, todo) {
+  $scope.todo = todo
+});
+
+/*
+app.controller('TodosCtrl', function($scope) {
+  $scope.todos = [
+      {title: "Take out the trash", done: true},
+      {title: "Do laundry", done: false},
+      {title: "Start cooking dinner", done: false}
+   ]
+})
+*/
 
 /*
 angular.module('starter', ['ionic'])

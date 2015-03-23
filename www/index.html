@@ -34,18 +34,22 @@
         </ion-header-bar>
 
         <ion-content>
-
-            <p>Hello World</p>
+            <!-- <p>Hello World</p> -->
 
             <!-- nav bar directive -->
             <ion-nav-bar class="bar-positive">
+                <ion-nav-back-button class="button-clear">
+                    <i class="ion-arrow-left-c"></i> Back
+                </ion-nav-back-button>
             </ion-nav-bar>
 
             <!-- tab directive -->
             <!-- ui-sref directive specifies the state we want to transition to -->
+
+            <!-- update template to reflect the new state -->
             <ion-tabs class="tabs-positive">
-                <ion-tab icon="ion-home" ui-sref="home">
-                    <ion-nav-view name="home"></ion-nav-view>
+                <ion-tab icon="ion-checkmark" ui-sref="app.todos">
+                    <ion-nav-view name="todos"></ion-nav-view>
                 </ion-tab>
                 <ion-tab icon="ion-help" ui-sref="help">
                     <ion-nav-view name="help"></ion-nav-view>
@@ -56,6 +60,55 @@
     </ion-pane>
 
     <!-- add templates -->
+    <!-- template corresponding to the URL registered with the router -->
+    <!-- new todos html -->
+
+    <ion-view title="Todos">
+        <ion-content>
+            <ion-list>
+                <ion-item ng-repeat="todo in todos" class="item item-icon-right" ui-sref="app.todos.detail({todo: $index})">
+                    <span ng-class="{done: todo.done}">{{todo.title}}</span>
+                </ion-item>
+            </ion-list>
+        </ion-content>
+    </ion-view>
+
+
+
+    <!-- todo.html, representing our detail view -->
+    <ion-view title="Todo">
+        <ion-content>
+            <div class="item">
+                <p>{{todo.title}}</p>
+            </div>
+
+            <div class="item item-checkbox">
+                <div>
+                    <label class="checkbox">
+                        <input type="checkbox" ng-model="todo.done">
+                    </label>
+                    Done
+                </div>
+
+            </div>
+        </ion-content>
+    </ion-view>
+
+
+
+    <!-- old todos html -->
+    <!--
+    <ion-view title="Todos">
+        <ion-content>
+            <ion-list>
+                <ion-item ng-repeat="todo in todos" class="item item-icon-right">
+                    <span ng-class="{done: todo.done}">{{todo.title}}</span>
+                </ion-item>
+            </ion-list>
+        </ion-content>
+    </ion-view>
+    -->
+    <!-- 
     <script type="text/ng-template" id="home.html">
         <ion-view title="Home">
             <ion-content padding="true">
@@ -64,7 +117,7 @@
             </ion-content>
         </ion-view>
     </script>
-
+    -->
     <script type="text/ng-template" id="help.html">
         <ion-view title="Help">
             <ion-content padding="true">
